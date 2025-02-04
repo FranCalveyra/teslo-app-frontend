@@ -1,8 +1,16 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:formz/formz.dart';
+import 'package:teslo_shop/config/router/app_router.dart';
 
 import '../../../shared/shared.dart';
 
+final loginFormProvider =
+    StateNotifierProvider.autoDispose<LoginFormStateNotifier, LoginFormState>(
+        (ref) {
+  return LoginFormStateNotifier();
+});
+
+// Definitions
 class LoginFormState {
   final bool isPosting;
   final bool isFormPosted;
@@ -69,6 +77,7 @@ class LoginFormStateNotifier extends StateNotifier<LoginFormState> {
     _touchAllFields();
     if (!state.isValid) return;
     print(state);
+    appRouter.go("/");
   }
 
   void _touchAllFields() {
@@ -83,9 +92,3 @@ class LoginFormStateNotifier extends StateNotifier<LoginFormState> {
     );
   }
 }
-
-final loginFormProvider =
-    StateNotifierProvider.autoDispose<LoginFormStateNotifier, LoginFormState>(
-        (ref) {
-  return LoginFormStateNotifier();
-});
