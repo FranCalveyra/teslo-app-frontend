@@ -1,16 +1,61 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:formz/formz.dart';
-import 'package:teslo_shop/config/router/app_router.dart';
+import 'package:teslo_shop/features/auth/presentation/providers/providers.dart';
 
 import '../../../shared/shared.dart';
+
+typedef LoginUserCallback = Future<void> Function(
+    String email, String password);
 
 final loginFormProvider =
     StateNotifierProvider.autoDispose<LoginFormStateNotifier, LoginFormState>(
         (ref) {
-  return LoginFormStateNotifier();
+  final loginUserCallback = ref.watch(authProvider.notifier).loginUser;
+  return LoginFormStateNotifier(loginUserCallback);
 });
 
 // Definitions
+class LoginFormStateNotifier extends StateNotifier<LoginFormState> {
+  final LoginUserCallback loginUserCallback;
+
+  LoginFormStateNotifier(this.loginUserCallback) : super(LoginFormState());
+
+  void onEmailChange(String value) {
+    final newEmail = Email.dirty(value);
+    state = state.copyWith(
+      email: newEmail,
+      isValid: Formz.validate([newEmail, state.password]),
+    );
+  }
+
+  void onPasswordChange(String value) {
+    final newPassword = Password.dirty(value);
+    state = state.copyWith(
+      password: newPassword,
+      isValid: Formz.validate([newPassword, state.email]),
+    );
+  }
+
+  // Navigation shouldn't be this provider's responsibility
+  void onFormSubmit() async {
+    _touchAllFields();
+    if (!state.isValid) return;
+    await loginUserCallback(state.email.value, state.password.value);
+  }
+
+  void _touchAllFields() {
+    final email = Email.dirty(state.email.value);
+    final password = Password.dirty(state.password.value);
+
+    state = state.copyWith(
+      isFormPosted: true,
+      email: email,
+      password: password,
+      isValid: Formz.validate([email, password]),
+    );
+  }
+}
+
 class LoginFormState {
   final bool isPosting;
   final bool isFormPosted;
@@ -51,44 +96,5 @@ class LoginFormState {
     email:        $email
     password:     $password
 ''';
-  }
-}
-
-class LoginFormStateNotifier extends StateNotifier<LoginFormState> {
-  LoginFormStateNotifier() : super(LoginFormState());
-
-  void onEmailChange(String value) {
-    final newEmail = Email.dirty(value);
-    state = state.copyWith(
-      email: newEmail,
-      isValid: Formz.validate([newEmail, state.password]),
-    );
-  }
-
-  void onPasswordChange(String value) {
-    final newPassword = Password.dirty(value);
-    state = state.copyWith(
-      password: newPassword,
-      isValid: Formz.validate([newPassword, state.email]),
-    );
-  }
-
-  void onFormSubmit() {
-    _touchAllFields();
-    if (!state.isValid) return;
-    print(state);
-    appRouter.go("/");
-  }
-
-  void _touchAllFields() {
-    final email = Email.dirty(state.email.value);
-    final password = Password.dirty(state.password.value);
-
-    state = state.copyWith(
-      isFormPosted: true,
-      email: email,
-      password: password,
-      isValid: Formz.validate([email, password]),
-    );
   }
 }

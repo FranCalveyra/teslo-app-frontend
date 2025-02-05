@@ -55,8 +55,8 @@ class _LoginForm extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final loginForm = ref.watch(loginFormProvider);
     final textStyles = Theme.of(context).textTheme;
-    
-    final notifier = ref.read(loginFormProvider.notifier);
+
+    final notifier = ref.watch(loginFormProvider.notifier);
 
     final emailInput = CustomTextFormField(
       label: 'Correo',
@@ -66,7 +66,6 @@ class _LoginForm extends ConsumerWidget {
           loginForm.isFormPosted ? loginForm.email.errorMessage : null,
     );
     final passwordInput = CustomTextFormField(
-      
       label: 'Contraseña',
       obscureText: true,
       errorMessage:
