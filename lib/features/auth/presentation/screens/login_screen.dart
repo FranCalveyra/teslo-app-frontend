@@ -54,9 +54,18 @@ class _LoginForm extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final loginForm = ref.watch(loginFormProvider);
+
+    ref.listen(
+      authProvider,
+      (previous, next) {
+        if (next.errorMessage.isEmpty) return;
+        _showSnackbar(context, next.errorMessage);
+      },
+    );
+
     final textStyles = Theme.of(context).textTheme;
 
-    final notifier = ref.watch(loginFormProvider.notifier);
+    final notifier = ref.read(loginFormProvider.notifier);
 
     final emailInput = CustomTextFormField(
       label: 'Correo',
@@ -106,5 +115,12 @@ class _LoginForm extends ConsumerWidget {
         ],
       ),
     );
+  }
+
+  void _showSnackbar(BuildContext context, String errorMessage) {
+    final snackBar = SnackBar(content: Text(errorMessage));
+    final messenger = ScaffoldMessenger.of(context);
+    messenger.hideCurrentSnackBar();
+    messenger.showSnackBar(snackBar);
   }
 }

@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:teslo_shop/config/constants/constants.dart';
 import 'package:teslo_shop/config/constants/environment.dart';
 import 'package:teslo_shop/features/auth/domain/domain.dart';
 import 'package:teslo_shop/features/auth/infrastructure/errors/auth_errors.dart';
@@ -22,11 +23,18 @@ class AuthDatasourceImpl extends AuthDatasource {
 
       return user;
     } on DioException catch (e) {
-      if (e.response?.statusCode == 401) throw WrongCredentials();
-      if (e.type == DioExceptionType.connectionTimeout) {
-        throw ConnectionTimeout();
+      if (e.response?.statusCode == 401) {
+        final String message =
+            e.response?.data["message"] ?? Constants.defaultErrorMessage;
+        final int statusCode =
+            e.response?.statusCode ?? Constants.defaultErrorCode;
+        throw CustomError(message: message, statusCode: statusCode);
       }
-      throw CustomError(message: 'Something went wrong', statusCode: 500);
+      if (_isConnectionTimeout(e)) {
+        throw CustomError(message: "Check Internet Connection");
+      }
+
+      throw CustomError();
     } catch (e) {
       throw Exception();
     }
@@ -40,5 +48,9 @@ class AuthDatasourceImpl extends AuthDatasource {
       required String repeatedPassword}) {
     // TODO: implement register
     throw UnimplementedError();
+  }
+
+  bool _isConnectionTimeout(DioException e) {
+    return e.type == DioExceptionType.connectionTimeout;
   }
 }
