@@ -9,8 +9,25 @@ class AuthDatasourceImpl extends AuthDatasource {
   final Dio dio = Dio(BaseOptions(baseUrl: Environment.apiUrl));
 
   @override
-  Future<User> checkAuthStatus(String token) {
-    throw UnimplementedError();
+  Future<User> checkAuthStatus(String token) async {
+    try {
+      final response = await dio.get(
+        "/auth/check-status",
+        options: Options(headers: {'Authorization': 'Bearer $token'}),
+      );
+      return UserMapper.userJsonToEntity(response.data);
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 401) {
+        throw CustomError(message: 'Invalid Token');
+      }
+      if (_isConnectionTimeout(e)) {
+        throw CustomError(message: "Check Internet Connection");
+      }
+
+      throw Exception();
+    } catch (e) {
+      throw Exception();
+    }
   }
 
   @override
@@ -24,17 +41,13 @@ class AuthDatasourceImpl extends AuthDatasource {
       return user;
     } on DioException catch (e) {
       if (e.response?.statusCode == 401) {
-        final String message =
-            e.response?.data["message"] ?? Constants.defaultErrorMessage;
-        final int statusCode =
-            e.response?.statusCode ?? Constants.defaultErrorCode;
-        throw CustomError(message: message, statusCode: statusCode);
+        throw ErrorMapper.customErrorFromDioException(e);
       }
       if (_isConnectionTimeout(e)) {
         throw CustomError(message: "Check Internet Connection");
       }
 
-      throw CustomError();
+      throw Exception();
     } catch (e) {
       throw Exception();
     }

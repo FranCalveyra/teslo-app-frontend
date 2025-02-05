@@ -50,6 +50,8 @@ class KeyValueStorageServiceImpl extends KeyValueStorageService {
       case List<String>:
         prefs.setStringList(key, value as List<String>);
         break;
+      default:
+        return;
     }
   }
 }
