@@ -38,26 +38,27 @@ final goRouterProvider = Provider((ref) {
       final isGoingTo = state.matchedLocation;
       final authStatus = goRouterNotifier.authStatus;
 
-      if (isGoingTo == "/splash" && authStatus == AuthStatus.checking) {
+      print('GoRouter authStatus: $authStatus; isGoingTo: $isGoingTo');
+
+      if (isGoingTo == '/splash' && authStatus == AuthStatus.checking) {
         return null;
       }
 
       if (authStatus == AuthStatus.notAuthenticated) {
-        if (isGoingTo == "/login" || isGoingTo == "/register") return null;
-        return "/login";
+        if (isGoingTo == '/login' || isGoingTo == '/register') return null;
+
+        return '/login';
       }
 
       if (authStatus == AuthStatus.authenticated) {
-        if (isGoingTo == "/login" ||
-            isGoingTo == "/register" ||
-            isGoingTo == "/splash") {
-          return "/";
+        if (isGoingTo == '/login' ||
+            isGoingTo == '/register' ||
+            isGoingTo == '/splash') {
+          return '/';
         }
       }
 
       return null;
     },
-
-    ///! TODO: Bloquear si no se está autenticado de alguna manera
   );
 });

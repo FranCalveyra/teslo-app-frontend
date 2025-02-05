@@ -51,18 +51,18 @@ class AuthNotifier extends StateNotifier<AuthState> {
     // state = state.copyWith(authStatus: AuthStatus.authenticated, user: user);
   }
 
-  Future<void> checkAuthStatus() async {
+  void checkAuthStatus() async {
     final token = await keyValueStorageService.getValue<String>('token');
     if (token == null) return logout();
     try {
       final user = await repository.checkAuthStatus(token);
       _setLoggedUser(user);
     } catch (e) {
-      return logout();
+      logout();
     }
   }
 
-  void logout([String? errorMessage]) async {
+  Future<void> logout([String? errorMessage]) async {
     await keyValueStorageService.removeKey('token');
     state = state.copyWith(
       authStatus: AuthStatus.notAuthenticated,
