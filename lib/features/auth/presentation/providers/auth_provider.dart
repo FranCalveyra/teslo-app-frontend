@@ -33,6 +33,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
 
   Future<void> registerUser(
       String email, String password, String fullName) async {
+    // TODO
     // final user = await repository.register(
     //     email: email,
     //     fullName: fullName,
@@ -53,9 +54,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
   // Private methods
   void _setLoggedUser(User user) {
     state = state.copyWith(
-      user: user,
-      authStatus: AuthStatus.authenticated,
-    );
+        user: user, authStatus: AuthStatus.authenticated, errorMessage: '');
   }
 }
 
