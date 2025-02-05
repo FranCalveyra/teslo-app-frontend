@@ -1,8 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:teslo_shop/config/constants/environment.dart';
 import 'package:teslo_shop/features/auth/domain/domain.dart';
-import 'package:teslo_shop/features/auth/infrastructure/errors/errors.dart';
-
+import 'package:teslo_shop/features/auth/infrastructure/errors/auth_errors.dart';
 import '../infrastructure.dart';
 
 class AuthDatasourceImpl extends AuthDatasource {
@@ -22,8 +21,14 @@ class AuthDatasourceImpl extends AuthDatasource {
       final user = UserMapper.userJsonToEntity(response.data);
 
       return user;
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 401) throw WrongCredentials();
+      if (e.type == DioExceptionType.connectionTimeout) {
+        throw ConnectionTimeout();
+      }
+      throw CustomError(message: 'Something went wrong', statusCode: 500);
     } catch (e) {
-      throw WrongCredentials();
+      throw Exception();
     }
   }
 
