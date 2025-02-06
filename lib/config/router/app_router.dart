@@ -1,9 +1,10 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import '../../features/auth/presentation/providers/providers.dart';
-import 'app_router_notifier.dart';
 import 'package:teslo_shop/features/auth/auth.dart';
+import 'package:teslo_shop/features/auth/presentation/providers/auth_provider.dart';
 import 'package:teslo_shop/features/products/products.dart';
+
+import 'app_router_notifier.dart';
 
 final goRouterProvider = Provider((ref) {
   final goRouterNotifier = ref.read(goRouterNotifierProvider);
@@ -37,8 +38,6 @@ final goRouterProvider = Provider((ref) {
     redirect: (context, state) {
       final isGoingTo = state.matchedLocation;
       final authStatus = goRouterNotifier.authStatus;
-
-      print('GoRouter authStatus: $authStatus; isGoingTo: $isGoingTo');
 
       if (isGoingTo == '/splash' && authStatus == AuthStatus.checking) {
         return null;

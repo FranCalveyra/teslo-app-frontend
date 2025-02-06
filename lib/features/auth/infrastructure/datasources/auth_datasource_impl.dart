@@ -1,5 +1,4 @@
 import 'package:dio/dio.dart';
-import 'package:teslo_shop/config/constants/constants.dart';
 import 'package:teslo_shop/config/constants/environment.dart';
 import 'package:teslo_shop/features/auth/domain/domain.dart';
 import 'package:teslo_shop/features/auth/infrastructure/errors/auth_errors.dart';
