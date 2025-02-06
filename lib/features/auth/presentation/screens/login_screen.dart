@@ -79,6 +79,7 @@ class _LoginForm extends ConsumerWidget {
       obscureText: true,
       errorMessage:
           loginForm.isFormPosted ? loginForm.password.errorMessage : null,
+      onFieldSubmitted: (_) => notifier.onFormSubmit(),
       onChanged: notifier.onPasswordChange,
     );
 
