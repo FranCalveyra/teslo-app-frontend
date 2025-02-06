@@ -1,8 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:teslo_shop/config/constants/environment.dart';
-import 'package:teslo_shop/features/auth/domain/domain.dart';
 
-import '../infrastructure.dart';
+import '../../domain/domain.dart';
+import '../mappers/mappers.dart';
 
 class ProductsDatasourceImpl extends ProductsDatasource {
   late final Dio dio;

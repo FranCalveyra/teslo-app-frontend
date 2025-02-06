@@ -1,6 +1,8 @@
-import '../domain.dart';
 
-abstract class ProductsDatasource {
+
+import 'package:teslo_shop/features/products/domain/entities/entities.dart';
+
+abstract class ProductsRepository {
   Future<List<Product>> getProductsByPage({int limit = 10, int offset = 0});
 
   Future<Product> getProductById(String id);

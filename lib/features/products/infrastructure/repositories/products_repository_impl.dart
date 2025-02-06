@@ -1,11 +1,9 @@
-import 'package:teslo_shop/features/auth/domain/domain.dart';
-import 'package:teslo_shop/features/auth/infrastructure/datasources/products_datasource_impl.dart';
+import '../../domain/domain.dart';
 
 class ProductsRepositoryImpl extends ProductsRepository {
   final ProductsDatasource datasource;
 
-  ProductsRepositoryImpl([ProductsDatasource? datasource])
-      : datasource = datasource ?? ProductsDatasourceImpl();
+  ProductsRepositoryImpl(this.datasource);
 
   @override
   Future<Product> createOrUpdateProduct(Map<String, dynamic> productDto) {
