@@ -20,7 +20,7 @@ class ProductsDatasourceImpl extends ProductsDatasource {
   Future<List<Product>> getProductsByPage(
       {int limit = 10, int offset = 0}) async {
     final response = await dio
-        .get<List<Map<String, dynamic>>>("/products", queryParameters: {
+        .get<List>("/products", queryParameters: {
       'limit': limit,
       'offset': offset,
     });

@@ -7,13 +7,13 @@ class ProductMapper {
   static Product jsonToEntity(Map<String, dynamic> json) => Product(
       id: json['id'] ?? '',
       title: json['title'] ?? '',
-      price: double.parse(json['price'] ?? '0'),
+      price: double.parse(json['price'].toString()),
       description: json['description'] ?? '',
       slug: json['slug'] ?? '',
       stock: json['stock'] ?? 0,
-      sizes: List<String>.from(json['sizes'].map((size) => size ?? '')),
+      sizes: _listFromEntry(json, 'sizes'),
       gender: json['gender'] ?? '',
-      tags: json['tags'],
+      tags: _listFromEntry(json, 'tags'),
       images: List<String>.from(
           json['images'].map((image) => _parseImage(image) ?? '')),
       user: UserMapper.userJsonToEntity(json['user']));
@@ -22,5 +22,9 @@ class ProductMapper {
     return image.startsWith("http")
         ? image
         : '${Environment.apiUrl}/files/product/$image';
+  }
+
+  static List<String> _listFromEntry(Map<String, dynamic> json, String key) {
+    return List<String>.from(json[key].map((value) => value ?? ''));
   }
 }
