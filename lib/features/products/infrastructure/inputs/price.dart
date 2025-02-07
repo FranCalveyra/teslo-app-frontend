@@ -1,7 +1,7 @@
 import 'package:formz/formz.dart';
 
 // Define input validation errors
-enum PriceError { empty, negative }
+enum PriceError { empty, negative, format }
 
 // Extend FormzInput and provide the input type and error type.
 class Price extends FormzInput<double, PriceError> {
@@ -18,6 +18,9 @@ class Price extends FormzInput<double, PriceError> {
     if (displayError == PriceError.negative) {
       return 'El precio no puede ser negativo';
     }
+    if (displayError == PriceError.format) {
+      return 'El precio debe ser un número mayor o igual a cero';
+    }
 
     return null;
   }
@@ -29,6 +32,7 @@ class Price extends FormzInput<double, PriceError> {
     if (valueString.isEmpty || valueString.trim().isEmpty) {
       return PriceError.empty;
     }
+    if (double.tryParse(valueString) == -1) return PriceError.format;
     if (value < 0) return PriceError.negative;
 
     return null;

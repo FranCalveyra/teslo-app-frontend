@@ -1,7 +1,7 @@
 import 'package:formz/formz.dart';
 
 // Define input validation errors
-enum StockError { empty, negative }
+enum StockError { empty, negative, format }
 
 // Extend FormzInput and provide the input type and error type.
 class Stock extends FormzInput<int, StockError> {
@@ -18,6 +18,9 @@ class Stock extends FormzInput<int, StockError> {
     if (displayError == StockError.negative) {
       return 'El stock no puede ser negativo';
     }
+    if (displayError == StockError.format) {
+      return 'El stock debe ser mayor o igual a cero';
+    }
 
     return null;
   }
@@ -29,7 +32,8 @@ class Stock extends FormzInput<int, StockError> {
     if (valueString.isEmpty || valueString.trim().isEmpty) {
       return StockError.empty;
     }
-    final tryInt = int.tryParse(value.toString()) ?? -1;
+    final tryInt = int.tryParse(valueString);
+    if (tryInt == -1 || tryInt == null) return StockError.format;
     if (tryInt < 0 || value < 0) return StockError.negative;
 
     return null;

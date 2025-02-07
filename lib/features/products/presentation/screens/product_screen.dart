@@ -11,9 +11,10 @@ class ProductScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final productState = ref.watch(singleProductProvider(productId));
-
+    // final productFormNotifier =
+    //     ref.read(productFormProvider(productState.product!).notifier);
     final floatingActionButton = FloatingActionButton(
-      onPressed: () {},
+      onPressed: () => {},
       child: const Icon(Icons.save_as_outlined),
     );
 
