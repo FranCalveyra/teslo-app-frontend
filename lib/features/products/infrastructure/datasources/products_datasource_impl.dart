@@ -1,5 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:teslo_shop/config/constants/environment.dart';
+import 'package:teslo_shop/features/products/infrastructure/errors/errors.dart';
+import 'package:teslo_shop/features/shared/infrastructure/mappers/mappers.dart';
 
 import '../../domain/domain.dart';
 import '../mappers/mappers.dart';
@@ -19,8 +21,7 @@ class ProductsDatasourceImpl extends ProductsDatasource {
   @override
   Future<List<Product>> getProductsByPage(
       {int limit = 10, int offset = 0}) async {
-    final response = await dio
-        .get<List>("/products", queryParameters: {
+    final response = await dio.get<List>("/products", queryParameters: {
       'limit': limit,
       'offset': offset,
     });
@@ -37,8 +38,19 @@ class ProductsDatasourceImpl extends ProductsDatasource {
   }
 
   @override
-  Future<Product> getProductById(String id) {
-    throw UnimplementedError();
+  Future<Product> getProductById(String id) async {
+    try {
+      final response = await dio.get("/products/$id");
+      return ProductMapper.jsonToEntity(response.data);
+      
+    } on DioException catch (e) {
+      
+      if (e.response?.statusCode == 404) throw ProductNotFoundError();
+      throw ErrorMapper.customErrorFromDioException(e);
+      
+    } catch (e) {
+      throw Exception();
+    }
   }
 
   @override

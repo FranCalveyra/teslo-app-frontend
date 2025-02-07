@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:teslo_shop/config/constants/constants.dart';
 import 'package:teslo_shop/features/products/presentation/providers/providers.dart';
 import 'package:teslo_shop/features/shared/shared.dart';
 
@@ -44,10 +45,19 @@ class _ProductsViewState extends ConsumerState<_ProductsView> {
   @override
   void initState() {
     super.initState();
+
+    final notifier = ref.read(productsProvider.notifier);
     scrollController.addListener(
-      () {},
+      () {
+        final currentPosition = scrollController.position.pixels;
+        final maxPosition = scrollController.position.maxScrollExtent;
+
+        if (currentPosition + Constants.maxScrollOffset >= maxPosition) {
+          notifier.loadNextPage();
+        }
+      },
     );
-    ref.read(productsProvider.notifier).loadNextPage();
+    notifier.loadNextPage();
   }
 
   @override
@@ -63,6 +73,7 @@ class _ProductsViewState extends ConsumerState<_ProductsView> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
       child: MasonryGridView.count(
+        controller: scrollController,
         physics: const BouncingScrollPhysics(),
         crossAxisCount: 2,
         itemBuilder: (context, index) {

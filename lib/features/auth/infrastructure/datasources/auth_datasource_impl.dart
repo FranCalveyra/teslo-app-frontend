@@ -1,8 +1,10 @@
 import 'package:dio/dio.dart';
 import 'package:teslo_shop/config/constants/environment.dart';
 import 'package:teslo_shop/features/auth/domain/domain.dart';
-import 'package:teslo_shop/features/auth/infrastructure/errors/auth_errors.dart';
-import '../infrastructure.dart';
+import 'package:teslo_shop/features/shared/infrastructure/mappers/mappers.dart';
+
+import '../errors/errors.dart';
+import '../mappers/mappers.dart';
 
 class AuthDatasourceImpl extends AuthDatasource {
   final Dio dio = Dio(BaseOptions(baseUrl: Environment.apiUrl));

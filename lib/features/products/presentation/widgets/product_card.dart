@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:teslo_shop/features/products/domain/domain.dart';
 import 'package:teslo_shop/config/constants/constants.dart';
 
@@ -9,12 +10,15 @@ class ProductCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        _ProductImage(images: product.images),
-        const SizedBox(height: 20),
-        Text(product.title, textAlign: TextAlign.center),
-      ],
+    return GestureDetector(
+      child: Column(
+        children: [
+          _ProductImage(images: product.images),
+          const SizedBox(height: 20),
+          Text(product.title, textAlign: TextAlign.center),
+        ],
+      ),
+      onTap: () => context.push("/products/${product.id}"),
     );
   }
 }
