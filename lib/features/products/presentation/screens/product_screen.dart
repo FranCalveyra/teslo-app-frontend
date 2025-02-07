@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:teslo_shop/config/constants/constants.dart';
-import 'package:teslo_shop/features/products/presentation/providers/single_product_provider.dart';
+import 'package:teslo_shop/features/products/presentation/providers/providers.dart';
 import 'package:teslo_shop/features/products/presentation/views/views.dart';
 import 'package:teslo_shop/features/shared/shared.dart';
 
@@ -12,7 +11,6 @@ class ProductScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final productState = ref.watch(singleProductProvider(productId));
-    final text = Text(_getTitle(productState));
 
     final floatingActionButton = FloatingActionButton(
       onPressed: () {},
@@ -30,7 +28,4 @@ class ProductScreen extends ConsumerWidget {
           : ProductView(product: productState.product!),
     );
   }
-
-  String _getTitle(ProductState productState) =>
-      productState.product?.title ?? Constants.productCardPlaceholderText;
 }

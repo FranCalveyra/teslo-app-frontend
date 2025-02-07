@@ -4,5 +4,6 @@ class Constants {
   static const double borderRadius = 20;
   static const double maxScrollOffset = 400;
   static const String productCardPlaceholderText =
-      "Oh no! Something went wrong when obtaining your product :( ";
+      'Oh no! Something went wrong when obtaining your product :( ';
+  static const String emptyString = '';
 }
