@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:teslo_shop/config/constants/constants.dart';
 import 'package:teslo_shop/features/products/presentation/providers/single_product_provider.dart';
+import 'package:teslo_shop/features/products/presentation/views/views.dart';
+import 'package:teslo_shop/features/shared/shared.dart';
 
 class ProductScreen extends ConsumerWidget {
   final String productId;
@@ -21,8 +23,11 @@ class ProductScreen extends ConsumerWidget {
       appBar: AppBar(
         title: const Text('Edit Product'),
       ),
-      body: Center(child: text),
+      // body: Center(child: text),
       floatingActionButton: floatingActionButton,
+      body: productState.isLoading
+          ? const FullScreenLoader()
+          : ProductView(product: productState.product!),
     );
   }
 
