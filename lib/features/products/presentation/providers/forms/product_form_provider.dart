@@ -111,7 +111,7 @@ class ProductFormNotifier extends StateNotifier<ProductFormState> {
     _touchAllFields();
     if (!state.isFormValid || onSubmitCallback == null) return false;
     final Map<String, dynamic> productDto = {
-      "id": state.id,
+      "id": state.id == "new" ? null : state.id,
       "title": state.title.value, // String
       "price": state.price.value, // double
       "slug": state.slug.value, // String
