@@ -17,15 +17,25 @@ class ProductScreen extends ConsumerWidget {
       child: const Icon(Icons.save_as_outlined),
     );
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Edit Product'),
+    return GestureDetector(
+      onTap: FocusScope.of(context).unfocus,
+      child: Scaffold(
+        appBar: AppBar(
+          centerTitle: true,
+          title: const Text('Edit Product'),
+          actions: [
+            IconButton(
+              onPressed: () {},
+              icon: const Icon(Icons.camera_alt_outlined),
+            ),
+          ],
+        ),
+        // body: Center(child: text),
+        floatingActionButton: floatingActionButton,
+        body: productState.isLoading
+            ? const FullScreenLoader()
+            : ProductView(product: productState.product!),
       ),
-      // body: Center(child: text),
-      floatingActionButton: floatingActionButton,
-      body: productState.isLoading
-          ? const FullScreenLoader()
-          : ProductView(product: productState.product!),
     );
   }
 
