@@ -12,15 +12,8 @@ class ProductScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final productState = ref.watch(singleProductProvider(productId));
 
-    final onPressed = productState.product != null
-        ? ref
-            .watch(productFormProvider(productState.product!).notifier)
-            .onFormSubmit
-        : null;
-    // final productFormNotifier =
-    //     ref.read(productFormProvider(productState.product!).notifier);
     final floatingActionButton = FloatingActionButton(
-      onPressed: onPressed,
+      onPressed: () => _onPressed(productState, ref, context),
       child: const Icon(Icons.save_as_outlined),
     );
 
@@ -33,6 +26,32 @@ class ProductScreen extends ConsumerWidget {
       body: productState.isLoading
           ? const FullScreenLoader()
           : ProductView(product: productState.product!),
+    );
+  }
+
+  void showSnackBar(BuildContext context) {
+    final messenger = ScaffoldMessenger.of(context);
+    messenger.clearSnackBars();
+    messenger.showSnackBar(
+      const SnackBar(
+        content: Text('Updated Product'),
+      ),
+    );
+  }
+
+  // Private methods
+  void _onPressed(
+      ProductState productState, WidgetRef ref, BuildContext context) {
+    if (productState.product == null) return;
+    ref
+        .read(productFormProvider(productState.product!).notifier)
+        .onFormSubmit()
+        .then(
+      (value) {
+        if (!value) return;
+        // ignore: use_build_context_synchronously
+        showSnackBar(context);
+      },
     );
   }
 }

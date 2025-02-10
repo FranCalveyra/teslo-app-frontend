@@ -5,7 +5,6 @@ import 'package:teslo_shop/config/constants/environment.dart';
 import 'package:teslo_shop/features/products/domain/domain.dart';
 import 'package:teslo_shop/features/products/infrastructure/inputs/inputs.dart';
 import 'package:teslo_shop/features/products/presentation/providers/product/products_provider.dart';
-import 'package:teslo_shop/features/products/presentation/providers/product/products_repository_provider.dart';
 
 // Provider
 final productFormProvider = StateNotifierProvider.autoDispose
