@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:teslo_shop/features/auth/infrastructure/repositories/auth_repository_impl.dart';
-import 'package:teslo_shop/features/auth/infrastructure/services/services.dart';
+import 'package:teslo_shop/features/shared/infrastructure/services/services.dart';
 
 import '../../domain/domain.dart';
 import '../../infrastructure/errors/errors.dart';

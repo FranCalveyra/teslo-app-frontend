@@ -60,9 +60,13 @@ class ProductsDatasourceImpl extends ProductsDatasource {
     try {
       final String? productId = productDto['id'];
       final String method = productId == null ? 'POST' : 'PATCH';
-      final String url = productId == null ? '/products' : '/products/$productId';
+      final String url =
+          productId == null ? '/products' : '/products/$productId';
 
       productDto.remove('id');
+
+      productDto['images'] = await _uploadPhotos(productDto['images']);
+
       final response = await dio.request(
         url,
         data: productDto,
@@ -76,4 +80,31 @@ class ProductsDatasourceImpl extends ProductsDatasource {
       throw Exception();
     }
   }
+
+  // Private methods
+  Future<List<String>> _uploadPhotos(List<String> photos) async {
+    final picsToUpload = photos.where(_isFileSystemPicture).toList();
+    final picsToIgnore = photos.where((e) => !_isFileSystemPicture(e)).toList();
+
+    final List<Future<String>> uploadJob =
+        picsToUpload.map((e) => _uploadFile(e)).toList();
+
+    final newPics = await Future.wait(uploadJob);
+    return [...picsToIgnore, ...newPics];
+  }
+
+  Future<String> _uploadFile(String path) async {
+    try {
+      final fileName = path.split('/').last;
+      final FormData data = FormData.fromMap({
+        'file': MultipartFile.fromFileSync(path, filename: fileName),
+      });
+      final response = await dio.post('/files/product', data: data);
+      return response.data['image'];
+    } catch (e) {
+      throw Exception();
+    }
+  }
+
+  bool _isFileSystemPicture(String photoPath) => photoPath.contains('/');
 }

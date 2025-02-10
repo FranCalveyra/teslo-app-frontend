@@ -107,6 +107,10 @@ class ProductFormNotifier extends StateNotifier<ProductFormState> {
     state = state.copyWith(tags: tags);
   }
 
+  void updateProductImage(String path) {
+    state = state.copyWith(images: [...state.images, path]);
+  }
+
   Future<bool> onFormSubmit() async {
     _touchAllFields();
     if (!state.isFormValid || onSubmitCallback == null) return false;

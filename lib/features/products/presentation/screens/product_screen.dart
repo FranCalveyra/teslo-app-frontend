@@ -17,18 +17,23 @@ class ProductScreen extends ConsumerWidget {
       child: const Icon(Icons.save_as_outlined),
     );
 
+    final selectImageButton = IconButton(
+      onPressed: () => _selectImage(ref, productState),
+      icon: const Icon(Icons.photo_library_outlined),
+    );
+
+    final takePhotoButton = IconButton(
+      onPressed: () => _takePicture(ref, productState),
+      icon: const Icon(Icons.camera_alt_outlined),
+    );
+
     return GestureDetector(
       onTap: FocusScope.of(context).unfocus,
       child: Scaffold(
         appBar: AppBar(
           centerTitle: true,
           title: const Text('Edit Product'),
-          actions: [
-            IconButton(
-              onPressed: () {},
-              icon: const Icon(Icons.camera_alt_outlined),
-            ),
-          ],
+          actions: [selectImageButton, takePhotoButton],
         ),
         // body: Center(child: text),
         floatingActionButton: floatingActionButton,
@@ -63,5 +68,21 @@ class ProductScreen extends ConsumerWidget {
         showSnackBar(context);
       },
     );
+  }
+
+  void _selectImage(WidgetRef ref, ProductState productState) async {
+    final photoPath = await CameraGalleryServiceImpl().selectPhoto();
+    if (photoPath == null) return;
+    ref
+        .read(productFormProvider(productState.product!).notifier)
+        .updateProductImage(photoPath);
+  }
+
+  void _takePicture(WidgetRef ref, ProductState productState) async {
+    final photoPath = await CameraGalleryServiceImpl().takePhoto();
+    if (photoPath == null) return;
+    ref
+        .read(productFormProvider(productState.product!).notifier)
+        .updateProductImage(photoPath);
   }
 }
