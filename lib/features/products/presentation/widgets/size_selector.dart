@@ -2,10 +2,14 @@ import 'package:flutter/material.dart';
 
 class SizeSelector extends StatelessWidget {
   final List<String> selectedSizes;
-  final List<String> sizes = const['XS','S','M','L','XL','XXL','XXXL'];
+  final List<String> sizes = const ['XS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL'];
+  final Function(List<String> selectedSizes) onSizesChanged;
 
-  const SizeSelector({super.key, required this.selectedSizes});
-
+  const SizeSelector({
+    super.key,
+    required this.selectedSizes,
+    required this.onSizesChanged,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -14,13 +18,12 @@ class SizeSelector extends StatelessWidget {
       showSelectedIcon: false,
       segments: sizes.map((size) {
         return ButtonSegment(
-          value: size, 
-          label: Text(size, style: const TextStyle(fontSize: 10))
-        );
-      }).toList(), 
-      selected: Set.from( selectedSizes ),
+            value: size,
+            label: Text(size, style: const TextStyle(fontSize: 10)));
+      }).toList(),
+      selected: Set.from(selectedSizes),
       onSelectionChanged: (newSelection) {
-        print(newSelection);
+        onSizesChanged(List.from(newSelection));
       },
       multiSelectionEnabled: true,
     );

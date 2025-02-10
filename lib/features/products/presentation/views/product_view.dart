@@ -71,9 +71,15 @@ class _ProductInformation extends ConsumerWidget {
           ),
           const SizedBox(height: 15),
           const Text('Extras'),
-          SizeSelector(selectedSizes: productForm.sizes),
+          SizeSelector(
+            selectedSizes: productForm.sizes,
+            onSizesChanged: notifier.onSizesChanged,
+          ),
           const SizedBox(height: 5),
-          GenderSelector(selectedGender: productForm.gender),
+          GenderSelector(
+            selectedGender: productForm.gender,
+            onGenderChanged: notifier.onGenderChanged,
+          ),
           const SizedBox(height: 15),
           CustomProductField(
             isTopField: true,

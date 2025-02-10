@@ -9,7 +9,13 @@ class GenderSelector extends StatelessWidget {
     Icons.boy,
   ];
 
-  const GenderSelector({super.key, required this.selectedGender});
+  final void Function(String gender) onGenderChanged;
+
+  const GenderSelector({
+    super.key,
+    required this.selectedGender,
+    required this.onGenderChanged,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -26,9 +32,7 @@ class GenderSelector extends StatelessWidget {
               label: Text(size, style: const TextStyle(fontSize: 12)));
         }).toList(),
         selected: {selectedGender},
-        onSelectionChanged: (newSelection) {
-          print(newSelection);
-        },
+        onSelectionChanged: (genderSet) => onGenderChanged(genderSet.first),
       ),
     );
   }

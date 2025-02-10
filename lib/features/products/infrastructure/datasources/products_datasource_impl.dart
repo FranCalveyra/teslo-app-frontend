@@ -42,12 +42,9 @@ class ProductsDatasourceImpl extends ProductsDatasource {
     try {
       final response = await dio.get("/products/$id");
       return ProductMapper.jsonToEntity(response.data);
-      
     } on DioException catch (e) {
-      
       if (e.response?.statusCode == 404) throw ProductNotFoundError();
       throw ErrorMapper.customErrorFromDioException(e);
-      
     } catch (e) {
       throw Exception();
     }
@@ -59,7 +56,24 @@ class ProductsDatasourceImpl extends ProductsDatasource {
   }
 
   @override
-  Future<Product> createOrUpdateProduct(Map<String, dynamic> productDto) {
-    throw UnimplementedError();
+  Future<Product> createOrUpdateProduct(Map<String, dynamic> productDto) async {
+    try {
+      final String? productId = productDto['id'];
+      final String method = productId == null ? 'POST' : 'PATCH';
+      final String url = productId == null ? '/post' : '/products/$productId';
+
+      productDto.remove('id');
+      final response = await dio.request(
+        url,
+        data: productDto,
+        options: Options(method: method),
+      );
+      return ProductMapper.jsonToEntity(response.data);
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 400) throw ProductNotFoundError();
+      throw ErrorMapper.customErrorFromDioException(e);
+    } catch (e) {
+      throw Exception();
+    }
   }
 }

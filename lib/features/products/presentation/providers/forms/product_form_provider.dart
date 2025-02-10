@@ -4,17 +4,24 @@ import 'package:teslo_shop/config/constants/constants.dart';
 import 'package:teslo_shop/config/constants/environment.dart';
 import 'package:teslo_shop/features/products/domain/domain.dart';
 import 'package:teslo_shop/features/products/infrastructure/inputs/inputs.dart';
+import 'package:teslo_shop/features/products/presentation/providers/product/products_provider.dart';
+import 'package:teslo_shop/features/products/presentation/providers/product/products_repository_provider.dart';
 
 // Provider
 final productFormProvider = StateNotifierProvider.autoDispose
     .family<ProductFormNotifier, ProductFormState, Product>((ref, product) {
-      //TODO: create onSubmitCallback
-  return ProductFormNotifier(product: product);
+  final notifier = ref.watch(productsProvider.notifier);
+  final onSubmitCallback = notifier.createOrUpdateProduct;
+  return ProductFormNotifier(
+    product: product,
+    onSubmitCallback: onSubmitCallback,
+  );
 });
 
 // Notifier
 class ProductFormNotifier extends StateNotifier<ProductFormState> {
-  final void Function(Map<String, dynamic> productDto)? onSubmitCallback;
+  final Future<bool> Function(Map<String, dynamic> productDto)?
+      onSubmitCallback;
 
   ProductFormNotifier({
     this.onSubmitCallback,
@@ -85,7 +92,7 @@ class ProductFormNotifier extends StateNotifier<ProductFormState> {
     );
   }
 
-  void onSizeChanged(List<String> sizes) {
+  void onSizesChanged(List<String> sizes) {
     state = state.copyWith(sizes: sizes);
   }
 
@@ -116,8 +123,11 @@ class ProductFormNotifier extends StateNotifier<ProductFormState> {
       "tags": state.tags.split(','),
       "images": state.images.map(_formatImage).toList(), // List<String>
     };
-    onSubmitCallback!(productDto);
-    return true;
+    try {
+      return await onSubmitCallback!(productDto);
+    } catch (e) {
+      return false;
+    }
   }
 
   String _formatImage(String image) {
